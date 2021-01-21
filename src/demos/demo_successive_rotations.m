@@ -80,4 +80,39 @@ viewer.showPointProjections(tpA, csA);
 % As it can be seen from the above image the matrix |Q_c_a| properly describes
 % transformation of coordinates from system C to system A.
 
+%% Rotation matrix versus coordinate transformation matrix
+% In this section we will show relation between matrix that rotates coordinate
+% system A to generate system C and the matrix that translates from coordinate system C
+% to coordinate system A
+
+%%
+% Firstly we will show one of the versors of coordinate system A
+viewer.clearAll();
+viewer.showCoordSys(csA);
+viewer.showCoordSys(csC);
+e1A = [1;0];
+viewer.showVector(e1A, [0;0], csA);
+
+%%
+% Then we calcuate the rotation matrix that rotates A to C, using
+% orientation matrices of the resective coordinate systems. We get
+R_a_c = cs.get_rotation_matrix(csA, csC);
+
+%%
+% We show the action of this matrix using it to rotate the versor of A
+e1A_rot = R_a_c* e1A;
+
+%%
+% Now if we plot the rotated versor we can see that it takes the orientation
+% that coincides with the orientation of coordinate axis of system C
+viewer.showVector(e1A_rot, [0;0], csA);
+
+%%
+% Finaly we can show that the the matrices side by side
+R_a_c
+Q_c_a
+R50 = cs_rotation(50)
+
+%%
+% Demo management
 cs_manage_demos('report', 'successive_rotations', true);
