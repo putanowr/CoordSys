@@ -1,10 +1,10 @@
-classdef CoordSys < handle
+classdef CoordSys3D < handle
 	properties(Access = public)
 		params = struct('armsLength', 2, 'color', 'red', 'name', 'dummy', 'width', 1);
 	end
   properties(SetAccess=public)
-		center = [0.0, 0.0];
-		orientation = eye(2);
+		center = [0.0; 0.0; 0.0];
+		orientation = eye(3);
   end
 	methods (Access=private)
     function setup(obj, params_)
@@ -16,7 +16,7 @@ classdef CoordSys < handle
 	end
 
   methods
-    function [obj] = CoordSys(params_)
+    function [obj] = CoordSys3D(params_)
 			if nargin < 1
 				params_ = struct();
 			end

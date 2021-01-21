@@ -1,4 +1,4 @@
-classdef Viewer < handle
+classdef Viewer3D < handle
   % Allow to plot in different coordinate systesm 
   properties(Access=private)
       fig;
@@ -64,19 +64,22 @@ classdef Viewer < handle
       end
       x = [point1(1), point2(1)];
       y = [point1(2), point2(2)];
+			z = [point1(3), point2(3)];
       color = cs_get_option(opts, 'Color', obj.lineColor);
-      line(x,y, 'Color', color);
+      line(x,y,z,'Color', color);
       axis(obj.myAX(), 'equal');
     end
 		function h = showCoordSys(obj, cs)
 			h = hggroup(obj.myAX());
       aL = cs.params.armsLength;
-			ptX = cs.map([aL;0]);
-			ptY = cs.map([0; aL]);
+			ptX = cs.map([aL;0;0]);
+			ptY = cs.map([0; aL;0]);
+			ptZ = cs.map([0; 0; aL]);
       color = cs.params.color;
 			width = cs.params.width;
-			line(h, [0, ptX(1)], [0, ptX(2)], 'Color', color, 'LineWidth', width);
-			line(h, [0, ptY(1)], [0, ptY(2)], 'Color', color, 'LineWidth', width);
+			line(h, [0, ptX(1)], [0, ptX(2)], [0, ptX(3)], 'Color', color, 'LineWidth', width);
+			line(h, [0, ptY(1)], [0, ptY(2)], [0, ptY(3)], 'Color', color, 'LineWidth', width);
+			line(h, [0, ptZ(1)], [0, ptZ(2)], [0, ptZ(3)], 'Color', color, 'LineWidth', width);
       axis(obj.myAX(), 'equal');
 		end
 		function h = showPointProjections(obj, pt, cs, varargin)
@@ -89,10 +92,12 @@ classdef Viewer < handle
         color = cs_get_option(opts, 'color', cs.params.color);
 			  h = hggroup(obj.myAX());
 			  ptP = cs.map(pt);
-			  ptX = cs.map([pt(1); 0]);
-				ptY = cs.map([0; pt(2)]);
-			  line(h, [ptX(1), ptP(1)], [ptX(2), ptP(2)], 'LineStyle','--', 'Color', color);
-			  line(h, [ptY(1), ptP(1)], [ptY(2), ptP(2)], 'LineStyle','--', 'Color', color);
+			  ptXZ = cs.map([pt(1); 0; pt(3)]);
+				ptYZ = cs.map([0; pt(2); pt(3)]);
+				ptXY = cs.map([pt(1); pt(2); 0]);
+			  line(h, [ptXZ(1), ptP(1)], [ptXZ(2), ptP(2)], [ptXZ(3), ptP(3)], 'LineStyle','--', 'Color', color);
+			  line(h, [ptYZ(1), ptP(1)], [ptYZ(2), ptP(2)], [ptYZ(3), ptP(3)], 'LineStyle','--', 'Color', color);
+			  line(h, [ptXY(1), ptP(1)], [ptXY(2), ptP(2)], [ptXY(3), ptP(3)], 'LineStyle','--', 'Color', color);
 		end
 		function h = showVector(obj, vec, at, cs, varargin)
             hold(obj.myAX(), 'on')
@@ -106,7 +111,7 @@ classdef Viewer < handle
 						atG = cs.map(at);
 						toG = cs.map(at+vec);
 						vecG = toG-atG;
-						h = quiver(obj.myAX(), atG(1), atG(2), vecG(1), vecG(2), 'LineWidth', width, 'Color', color, 'MaxHeadSize', 0.5);
+						h = quiver3(obj.myAX(), atG(1), atG(2), atG(3), vecG(1), vecG(2), vecG(3), 'LineWidth', width, 'Color', color, 'MaxHeadSize', 0.5);
 		end
 
 
@@ -122,9 +127,9 @@ classdef Viewer < handle
 			globPt = cs.map(pt);
             marker = cs_get_option(opts, 'marker', 'o');
             if cs_get_option(opts, 'filled', false)
-            	h = scatter(obj.myAX(), globPt(1), globPt(2), ptsize, marker, color,'filled');
+            	h = scatter3(obj.myAX(), globPt(1), globPt(2), globPt(3), ptsize, marker, color,'filled');
             else
-                h = scatter(obj.myAX(), globPt(1), globPt(2), ptsize, marker, color);
+                h = scatter3(obj.myAX(), globPt(1), globPt(2), globPt(3), ptsize, marker, color);
             end
 		end
 
